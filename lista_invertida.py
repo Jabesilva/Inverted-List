@@ -42,9 +42,9 @@ class Tabela:
         selection_sort(self.__elementos)
 
     def delElemento(self, NomeElemento):
-        for i in self.__elementos:
-            if i.nome == NomeElemento:
-                self.__elementos.pop(i)
+        for elemento in self.__elementos:
+            if elemento.nome == NomeElemento:
+                self.__elementos.pop(elemento)
 
     def getElementos(self):
         return self.__elementos
@@ -55,6 +55,18 @@ class DiretorioCidade:
         self.__lista_floripa = []
         self.__lista_biguacu= []
         self.__lista_palhoca = []
+
+    @property
+    def lista_floripa(self):
+        return self.__lista_floripa
+    
+    @property
+    def lista_biguacu(self):
+        return self.__lista_biguacu
+    
+    @property
+    def lista_palhoca(self):
+        return self.__lista_palhoca
 
     def add(self, elemento):
         if elemento.cidade == "floripa":
@@ -94,13 +106,26 @@ class DiretorioComida:
 
 class DiretorioAltura:
     def __init__(self):
-        self.__lista_160_169 = []
+        self.__lista_ate_169 = []
         self.__lista_170_179 = []
         self.__lista_180_mais = []
 
+    @property
+    def lista_ate_169(self):
+        return self.__lista_ate_169
+    
+    @property
+    def lista_170_179(self):
+        return self.__lista_170_179
+    
+    @property
+    def lista_180_mais(self):
+        return self.__lista_180_mais
+
+
     def add(self, elemento):
-        if 1.60 <= elemento.altura <= 1.69:
-            self.__lista_160_169.append(elemento.id)
+        if elemento.altura <= 1.69:
+            self.__lista_ate_169.append(elemento.id)
         elif 1.70 <= elemento.altura <= 1.79:
             self.__lista_170_179.append(elemento.id)
         elif 1.80 <= elemento.altura:
@@ -123,11 +148,19 @@ def print_lista_comida(diretorio):
     print("feijao:", diretorio.lista_feijao)
     print("arroz:", diretorio.lista_arroz)
 
+def print_lista_cidade(diretorio):
+    print("floipa:", diretorio.lista_floripa)
+    print("biguacu:", diretorio.lista_biguacu)
+    print("palhoca:", diretorio.lista_palhoca)
 
-def cargaDados():
+def print_lista_altura(diretorio):
+    print("até 169:", diretorio.lista_ate_169)
+    print("1,70 - 1,79:", diretorio.lista_170_179)
+    print("1,80 +:", diretorio.lista_180_mais)
+
+
+def cargaDados(tabela):
     
-    tabela = Tabela()
-
     e1 = Elemento("Jabes", "biguacu", "macarrao", 1.70)
     e2 = Elemento("DeLuca","floripa", "arroz", 1.73)
     e3 = Elemento("Lucas", "palhoca", "feijao", 1.65)
@@ -160,3 +193,7 @@ def cargaDados():
     print("\n")
     print("Ref Comidas")
     print(print_lista_comida(tabela.dirComida))
+    print("\n")
+    print(print_lista_cidade(tabela.dirCidade))
+    print("\n")
+    print(print_lista_altura(tabela.dirAltura))
