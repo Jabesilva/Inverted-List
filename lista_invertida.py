@@ -34,6 +34,7 @@ class Tabela:
     def dirAltura(self):
         return self.__dirAltura
     
+    #adiciona elemento à tabela
     def addElemento(self, elemento):
         self.__elementos.append(elemento)
         self.__dirComida.add(elemento)
@@ -41,96 +42,181 @@ class Tabela:
         self.__dirAltura.add(elemento)
         selection_sort(self.__elementos)
 
+    #deleta elemento da tabela
     def delElemento(self, NomeElemento):
         for elemento in self.__elementos:
             if elemento.nome == NomeElemento:
-                self.__elementos.pop(elemento)
+                self.__elementos.remove(elemento)
+                break
 
     def getElementos(self):
         return self.__elementos
-
     
+    #método de busca simples
+    def busca_simples(self, tabela, coluna, espec):
+        if coluna == "comida":
+            return getattr(tabela.dirComida, espec)
+        elif coluna == "cidade":
+            return getattr(tabela.dirCidade, espec)
+        elif coluna == "altura":
+            return getattr(tabela.dirAltura, espec)
+    #funcao auxiliar  
+    def buscar_por_ID(self, id, alt):
+            for elemento in self.__elementos:
+                if id == elemento.id and alt == elemento.altura:
+                    return elemento.altura
+
+    #método de busca composta  
+    def busca_composta(self, criterio1, criterio2):
+        listacriterio1 = None
+        listacriterio2 = None
+
+        if criterio1 == "macarrao" or criterio1 == "feijao" or criterio1 == "arroz":
+            listacriterio1 = getattr(self.__dirComida, criterio1)
+        elif criterio1 == "floripa" or criterio1 == "biguacu" or criterio1 == "palhoca":
+            listacriterio1 = getattr(self.__dirCidade, criterio1)
+        else:
+            listaintervalo = None
+            listacriterio1 = []
+            if (1.69 >= float(criterio1)):
+                listaintervalo = self.__dirAltura.ate_169
+
+            elif (1.70 <= float(criterio1) <= 1.79):
+                listaintervalo = self.__dirAltura._170_179
+
+            elif (1.80 <= float(criterio1)):
+                listaintervalo = self.__dirAltura._180_mais
+
+            for id in listaintervalo:
+                if float(criterio1) == self.buscar_por_ID(id, float(criterio1)):
+                    listacriterio1.append(id)
+
+            # listacriterio1 = getattr(self.__dirAltura, criterio1)
+
+        if criterio2 == "macarrao" or criterio2 == "feijao" or criterio2 == "arroz":
+            listacriterio2 = getattr(self.__dirComida, criterio2)
+        elif criterio2 == "floripa" or criterio2 == "biguacu" or criterio2 == "palhoca":
+            listacriterio2 = getattr(self.__dirCidade, criterio2)
+        else:
+            listaintervalo = None
+            listacriterio2 = []
+            if (1.69 >= float(criterio2)):
+                listaintervalo = self.__dirAltura.ate_169
+
+            elif (1.70 <= float(criterio2) <= 1.79):
+                listaintervalo = self.__dirAltura._170_179
+
+            elif (1.80 <= float(criterio2)):
+                listaintervalo = self.__dirAltura._180_mais
+
+            for id in listaintervalo:
+                if float(criterio2) == self.buscar_por_ID(id, float(criterio2)):
+                    listacriterio2.append(id)
+
+        resultado = list(set(listacriterio1) & set(listacriterio2))
+
+        return resultado
+
+#classe do diretorio das cidades
 class DiretorioCidade:
     def __init__(self):
-        self.__lista_floripa = []
-        self.__lista_biguacu= []
-        self.__lista_palhoca = []
+        self.__floripa = []
+        self.__biguacu= []
+        self.__palhoca = []
 
     @property
-    def lista_floripa(self):
-        return self.__lista_floripa
+    def floripa(self):
+        return self.__floripa
     
     @property
-    def lista_biguacu(self):
-        return self.__lista_biguacu
+    def biguacu(self):
+        return self.__biguacu
     
     @property
-    def lista_palhoca(self):
-        return self.__lista_palhoca
+    def palhoca(self):
+        return self.__palhoca
 
     def add(self, elemento):
-        if elemento.cidade == "floripa":
-            self.__lista_floripa.append(elemento.id)
-        elif elemento.cidade == "biguacu":
-            self.__lista_biguacu.append(elemento.id)
-        else:
-            self.__lista_palhoca.append(elemento.id)
+        try:
+            cidade = elemento.cidade.lower()
 
+            if cidade == "floripa":
+                self.__floripa.append(elemento.id)
+            elif cidade == "biguacu":
+                self.__biguacu.append(elemento.id)
+            elif cidade == "palhoca":
+                self.__palhoca.append(elemento.id)
+            else:
+                raise ValueError(f"Valor de cidade inválido: {cidade}")
+            
+        except ValueError as e:
+            print(f"Erro de valor: {e}")
 
+#classe do diretorio das comidas
 class DiretorioComida:
     def __init__(self):
-        self.__lista_macarrao = []
-        self.__lista_feijao = []
-        self.__lista_arroz = []
+        self.__macarrao = []
+        self.__feijao = []
+        self.__arroz = []
 
     @property
-    def lista_macarrao(self):
-        return self.__lista_macarrao
+    def macarrao(self):
+        return self.__macarrao
     
     @property
-    def lista_feijao(self):
-        return self.__lista_feijao
+    def feijao(self):
+        return self.__feijao
     
     @property
-    def lista_arroz(self):
-        return self.__lista_arroz
+    def arroz(self):
+        return self.__arroz
 
 
     def add(self, elemento):
-        if elemento.comida == "macarrao":
-            self.__lista_macarrao.append(elemento.id)
-        elif elemento.comida == "feijao":
-            self.__lista_feijao.append(elemento.id)
-        else:
-            self.__lista_arroz.append(elemento.id)
+        try:
+            comida = elemento.comida.lower()
 
+            if comida == "macarrao":
+                self.__macarrao.append(elemento.id)
+            elif comida == "feijao":
+                self.__feijao.append(elemento.id)
+            elif comida == "arroz":
+                self.__arroz.append(elemento.id)
+            else:
+                raise ValueError(f"Valor de comida inválido: {comida}")
+        
+        except ValueError as e:
+            print(f"Erro de valor: {e}")
+
+#classe do diretório das alturas
 class DiretorioAltura:
     def __init__(self):
-        self.__lista_ate_169 = []
-        self.__lista_170_179 = []
-        self.__lista_180_mais = []
+        self.__ate_169 = []
+        self.__170_179 = []
+        self.__180_mais = []
 
     @property
-    def lista_ate_169(self):
-        return self.__lista_ate_169
+    def ate_169(self):
+        return self.__ate_169
     
     @property
-    def lista_170_179(self):
-        return self.__lista_170_179
+    def _170_179(self):
+        return self.__170_179
     
     @property
-    def lista_180_mais(self):
-        return self.__lista_180_mais
+    def _180_mais(self):
+        return self.__180_mais
 
 
     def add(self, elemento):
         if elemento.altura <= 1.69:
-            self.__lista_ate_169.append(elemento.id)
+            self.__ate_169.append(elemento.id)
         elif 1.70 <= elemento.altura <= 1.79:
-            self.__lista_170_179.append(elemento.id)
+            self.__170_179.append(elemento.id)
         elif 1.80 <= elemento.altura:
-            self.__lista_180_mais.append(elemento.id)
+            self.__180_mais.append(elemento.id)
 
+#retorna a tabela principal
 def print_tabela(tabela):
     # Imprime cabeçalho da tabela
     print(f"| {'ID':^3} | {'Nome':^10} | {'Cidade':^15} | {'Comida':^10} | {'Altura':^7} |")
@@ -142,23 +228,30 @@ def print_tabela(tabela):
         print(f"| {pessoa.id:^3} | {pessoa.nome:^10} | {pessoa.cidade:^15} | {pessoa.comida:^10} | {altura_formatada:^7} |")
 
     print("-" * 55)
+    print('\n')
 
+#retorna o diretório das comidas
 def print_lista_comida(diretorio):
-    print("macarrao:", diretorio.lista_macarrao)
-    print("feijao:", diretorio.lista_feijao)
-    print("arroz:", diretorio.lista_arroz)
+    print("macarrao:", diretorio.macarrao)
+    print("feijao:", diretorio.feijao)
+    print("arroz:", diretorio.arroz)
+    print('\n')
 
+#retorna o diretório das cidades
 def print_lista_cidade(diretorio):
-    print("floipa:", diretorio.lista_floripa)
-    print("biguacu:", diretorio.lista_biguacu)
-    print("palhoca:", diretorio.lista_palhoca)
+    print("floripa:", diretorio.floripa)
+    print("biguacu:", diretorio.biguacu)
+    print("palhoca:", diretorio.palhoca)
+    print('\n')
 
+#retorna o diretório das alturas dos usuários
 def print_lista_altura(diretorio):
-    print("até 169:", diretorio.lista_ate_169)
-    print("1,70 - 1,79:", diretorio.lista_170_179)
-    print("1,80 +:", diretorio.lista_180_mais)
+    print("até 169:", diretorio.ate_169)
+    print("1,70 - 1,79:", diretorio._170_179)
+    print("1,80 +:", diretorio._180_mais)
+    print('\n')
 
-
+#função de carga de dados
 def cargaDados(tabela):
     
     e1 = Elemento("Jabes", "biguacu", "macarrao", 1.70)
@@ -197,3 +290,4 @@ def cargaDados(tabela):
     print(print_lista_cidade(tabela.dirCidade))
     print("\n")
     print(print_lista_altura(tabela.dirAltura))
+    print('\n')

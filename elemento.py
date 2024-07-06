@@ -1,5 +1,6 @@
 import random
 
+#classe elementar
 class Elemento:
     _id_counter = 0
     def __init__(self, nome: str, cidade: str, comida: str, altura: float):
@@ -29,10 +30,4 @@ class Elemento:
     @property
     def altura(self):
         return self.__altura
-    
-class listaInvertida:
-    def __init__(self) -> None:
-        self.__IDs = []
 
-    def add(self, elemento):
-        self.__IDs.append(elemento)
